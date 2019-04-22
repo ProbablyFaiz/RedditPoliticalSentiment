@@ -1,10 +1,9 @@
 import praw
 import csv
-import datetime
+import time
 from multiprocessing import Process
 
-#On Reddit and the Reddit API, adding subreddits together in the url such that you have r/sub1+sub2+...
-#treats the resulting combination of subs as one single subreddit, allowing me to scrape all of them simultaneously
+#On Reddit and the Reddit API, adding subreddits together in the url such that you have r/sub1+sub2+... treats the resulting combination of subs as one single subreddit, allowing me to scrape all of them simultaneously
 def createMultiSubString(subArr):
     multiString = ""
     for sub in subArr:
@@ -21,17 +20,24 @@ def collectSubComments(fileName, subString):
             commentBodySansFormatting = comment.body.encode('ascii', errors='ignore')
             filewriter.writerow([commentBodySansFormatting, comment.subreddit, comment.created_utc, comment.author, comment.id])
 
-def main():
-    reddit = praw.Reddit()
-    print(reddit.read_only)
 
-    liberalSubreddits = ["neoliberal","LateStageCapitalism","SandersForPresident","socialism","EnoughTrumpSpam","progressive"]
-    conservativeSubreddits = ["the_donald","Conservative","askthe_donald","libertarian","TheNewRight"]
+reddit = praw.Reddit()
+print(reddit.read_only)
 
-    libString = createMultiSubString( liberalSubreddits)
-    conString = createMultiSubString(conservativeSubreddits)
-    print(libString)
+liberalSubreddits = ["neoliberal","LateStageCapitalism","SandersForPresident","socialism","EnoughTrumpSpam","progressive"]
+conservativeSubreddits = ["the_donald","Conservative","askthe_donald","libertarian","TheNewRight"]
 
-    collectSubComments('LiberalSubComments', libString)
-    collectSubComments('ConservativeSubComments', conString)
+libString = createMultiSubString( liberalSubreddits)
+conString = createMultiSubString(conservativeSubreddits)
+print(libString)
+
+libProcess = Process(target=collectSubComments,args=('LiberalSubComments', libString))
+conProcess = Process(target=collectSubComments,args=('ConservativeSubComments', conString))
+if __name__ == '__main__':
+    libProcess.start()
+    conProcess.start()
+
+    time.sleep(259200)
+    libProcess.terminate()
+    conProcess.terminate()
 
