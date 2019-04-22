@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>7c700cde-2f3f-4d82-be17-33077249064c</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>RedditPoliticalSentiment.py</StartupFile>
+    <StartupFile>CollectRedditComments.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,7 +21,10 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="RedditPoliticalSentiment.py" />
+    <Compile Include="ProcessCSVComments.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CollectRedditComments.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

@@ -29,7 +29,6 @@ conservativeSubreddits = ["the_donald","Conservative","askthe_donald","libertari
 
 libString = createMultiSubString( liberalSubreddits)
 conString = createMultiSubString(conservativeSubreddits)
-print(libString)
 
 libProcess = Process(target=collectSubComments,args=('LiberalSubComments', libString))
 conProcess = Process(target=collectSubComments,args=('ConservativeSubComments', conString))
