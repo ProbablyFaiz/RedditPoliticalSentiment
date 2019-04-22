@@ -4,6 +4,7 @@
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
 praw.ini
+bfg-1.13.0.jar
 
 # User-specific files
 *.rsuser
