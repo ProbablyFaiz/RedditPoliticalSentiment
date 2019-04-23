@@ -1,7 +1,8 @@
-import praw
 import csv
 import time
 from multiprocessing import Process
+
+import praw
 import unidecode
 
 
@@ -21,15 +22,16 @@ def collectSubComments(fileName, subString):
                                 quotechar='"', escapechar='\\', quoting=csv.QUOTE_ALL)
         filewriter.writerow(['Comment', 'Subreddit', 'Date Created', 'Author', 'ID'])
         for comment in reddit.subreddit(subString).stream.comments():
-            commentBodySansFormatting = unidecode.unidecode(comment.body)
-            filewriter.writerow(
-                [commentBodySansFormatting, comment.subreddit, comment.created_utc, comment.author, comment.id])
-
+            asciiCommentBody = unidecode.unidecode(comment.body)
+            if len(asciiCommentBody.split()) > 3:
+                filewriter.writerow(
+                    [asciiCommentBody, comment.subreddit, comment.created_utc, comment.author, comment.id])
 
 reddit = praw.Reddit()
 print(reddit.read_only)
 
-liberalSubreddits = ["neoliberal", "LateStageCapitalism", "SandersForPresident", "socialism", "EnoughTrumpSpam",
+liberalSubreddits = ["politics", "neoliberal", "LateStageCapitalism", "SandersForPresident", "socialism",
+                     "EnoughTrumpSpam",
                      "progressive"]
 conservativeSubreddits = ["the_donald", "Conservative", "askthe_donald", "libertarian", "TheNewRight"]
 
@@ -42,6 +44,6 @@ if __name__ == '__main__':
     libProcess.start()
     conProcess.start()
 
-    time.sleep(10)
+    time.sleep(200000)
     libProcess.terminate()
     conProcess.terminate()
