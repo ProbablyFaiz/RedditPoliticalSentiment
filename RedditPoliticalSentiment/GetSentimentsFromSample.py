@@ -1,10 +1,21 @@
 import time
 from statistics import mean
 # noinspection PyUnresolvedReferences
-import CreateCommentSamples
-# noinspection PyUnresolvedReferences
 import config
 import paralleldots
+import random
+import pandas
+
+def getRandomSample(sampleSize, fileName):
+    population = pandas.read_csv(fileName, sep=',')
+    populationSize = len(population.index)
+    rowsToSkip = random.sample(range(1, populationSize), populationSize - sampleSize)
+    sample = pandas.read_csv(fileName, skiprows=rowsToSkip)
+    return sample
+
+def convertSampleToArray(sample):
+    comments = sample.Comment.values
+    return comments
 
 paralleldots.set_api_key(config.parallelDotsAPIKey)
 langCode = config.lang_code  # Set to "en", can be changed
@@ -36,8 +47,8 @@ def netSentimentsWithRateLimit(requestsPerMinuteAllowed, commentArray):
 def takeSampleAndGetMeanSentiment(populationFileName):
     sampleSize = 100
     rateLimitPerMin = 15
-    sample = CreateCommentSamples.getRandomSample(sampleSize, populationFileName)
-    sampleCommentArr = CreateCommentSamples.convertSampleToArray(sample).tolist()
+    sample = getRandomSample(sampleSize, populationFileName)
+    sampleCommentArr = convertSampleToArray(sample).tolist()
     # Rate limit is approx 20 requests/min, using 15 just in case because long comments can count for multiple requests
     netSampleSentiments = netSentimentsWithRateLimit(rateLimitPerMin, sampleCommentArr)
     meanSampleSentiment = mean(netSampleSentiments)
@@ -48,3 +59,4 @@ liberalMeanSentiment = takeSampleAndGetMeanSentiment('LiberalSubComments.csv')
 conservativeMeanSentiment = takeSampleAndGetMeanSentiment('ConservativeSubComments.csv')
 meanSentimentDifference = liberalMeanSentiment - conservativeMeanSentiment
 print("Mean Difference: %d" % meanSentimentDifference)
+

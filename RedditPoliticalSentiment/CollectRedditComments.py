@@ -1,7 +1,6 @@
 import csv
 import time
 from multiprocessing import Process
-
 import praw
 import unidecode
 
