@@ -11,10 +11,15 @@ def getRandomSample(sampleSize, fileName):
     return sample
 
 
+def convertSampleToArray(sample):
+    comments = sample.Comment.values
+    return comments
+
 sampleSize = 10
 projectPath = 'C:/Users/faizs/source/Python/RedditPoliticalSentiment/RedditPoliticalSentiment/'
 
-liberalSample = getRandomSample(sampleSize, "LiberalSubComments.csv")
-liberalSample.to_csv(path_or_buf=projectPath + 'LiberalSubSample.csv')
-conservativeSample = getRandomSample(sampleSize, "ConservativeSubComments.csv")
-conservativeSample.to_csv(path_or_buf=projectPath + 'ConservativeSubSample.csv')
+liberalSample = getRandomSample(sampleSize, "LiberalSubCommentsTest.csv")
+convertSampleToArray(liberalSample)
+# liberalSample.to_csv(path_or_buf=projectPath + 'LiberalSubSample.csv')
+# conservativeSample = getRandomSample(sampleSize, "ConservativeSubComments.csv")
+# conservativeSample.to_csv(path_or_buf=projectPath + 'ConservativeSubSample.csv')
