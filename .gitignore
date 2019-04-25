@@ -7,7 +7,6 @@ praw.ini
 bfg-1.13.0.jar
 settings.cfg
 config.py
-*.csv
 
 # User-specific files
 *.rsuser
