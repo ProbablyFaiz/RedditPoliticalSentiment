@@ -61,11 +61,11 @@ def takeSampleAndGetMeanSentiment(populationFileName):
                 [comment[0], comment[1], comment[2], comment[3], comment[4], netSampleSentiments[index]])
 
     meanSampleSentiment = mean(netSampleSentiments)
-    print('Mean Sample Sentiment for (%d): ' % populationFileName + str(meanSampleSentiment))
+    print('Mean Sample Sentiment: ' + str(meanSampleSentiment))
     return meanSampleSentiment
 
 
-liberalMeanSentiment = takeSampleAndGetMeanSentiment('LiberalSubComments.csv')
-# conservativeMeanSentiment = takeSampleAndGetMeanSentiment('ConservativeSubComments.csv')
+# liberalMeanSentiment = takeSampleAndGetMeanSentiment('LiberalSubComments.csv')
+conservativeMeanSentiment = takeSampleAndGetMeanSentiment('ConservativeSubComments.csv')
 # meanSentimentDifference = liberalMeanSentiment - conservativeMeanSentiment
 # print("Mean Difference: %d" % meanSentimentDifference)
