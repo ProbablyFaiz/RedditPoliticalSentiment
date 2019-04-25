@@ -1,10 +1,13 @@
+import csv
+import random
 import time
 from statistics import mean
+
 # noinspection PyUnresolvedReferences
 import config
-import paralleldots
-import random
 import pandas
+import paralleldots
+
 
 def getRandomSample(sampleSize, fileName):
     population = pandas.read_csv(fileName, sep=',')
@@ -12,10 +15,6 @@ def getRandomSample(sampleSize, fileName):
     rowsToSkip = random.sample(range(1, populationSize), populationSize - sampleSize)
     sample = pandas.read_csv(fileName, skiprows=rowsToSkip)
     return sample
-
-def convertSampleToArray(sample):
-    comments = sample.Comment.values
-    return comments
 
 paralleldots.set_api_key(config.parallelDotsAPIKey)
 langCode = config.lang_code  # Set to "en", can be changed
@@ -45,18 +44,29 @@ def netSentimentsWithRateLimit(requestsPerMinuteAllowed, commentArray):
     return allNetSentiments
 
 def takeSampleAndGetMeanSentiment(populationFileName):
-    sampleSize = 100
+    sampleSize = 500
     rateLimitPerMin = 15
     sample = getRandomSample(sampleSize, populationFileName)
-    sampleCommentArr = convertSampleToArray(sample).tolist()
+    sampleArr = sample.values.tolist()
+
     # Rate limit is approx 20 requests/min, using 15 just in case because long comments can count for multiple requests
-    netSampleSentiments = netSentimentsWithRateLimit(rateLimitPerMin, sampleCommentArr)
+    netSampleSentiments = netSentimentsWithRateLimit(rateLimitPerMin, sample.Comment.values.tolist())
+    # Adds the word "Sample" to end of the data file name and creates a CSV populated with the sample comments
+    with open(populationFileName[:-4] + 'Sample.csv', 'w', newline='', encoding='ascii') as csvfile:
+        filewriter = csv.writer(csvfile, delimiter=',',
+                                quotechar='"', escapechar='\\', quoting=csv.QUOTE_ALL)
+        filewriter.writerow(['Comment', 'Subreddit', 'Date Created', 'Author', 'ID', 'Sentiment Score'])
+        for index, comment in enumerate(sampleArr):
+            filewriter.writerow(
+                [comment[0], comment[1], comment[2], comment[3], comment[4], netSampleSentiments[index]])
+
     meanSampleSentiment = mean(netSampleSentiments)
     print('Mean Sample Sentiment for (%d): ' % populationFileName + str(meanSampleSentiment))
     return meanSampleSentiment
 
-liberalMeanSentiment = takeSampleAndGetMeanSentiment('LiberalSubComments.csv')
-conservativeMeanSentiment = takeSampleAndGetMeanSentiment('ConservativeSubComments.csv')
-meanSentimentDifference = liberalMeanSentiment - conservativeMeanSentiment
-print("Mean Difference: %d" % meanSentimentDifference)
 
+# liberalMeanSentiment =
+takeSampleAndGetMeanSentiment('LiberalSubComments.csv')
+# conservativeMeanSentiment = takeSampleAndGetMeanSentiment('ConservativeSubComments.csv')
+# meanSentimentDifference = liberalMeanSentiment - conservativeMeanSentiment
+# print("Mean Difference: %d" % meanSentimentDifference)
