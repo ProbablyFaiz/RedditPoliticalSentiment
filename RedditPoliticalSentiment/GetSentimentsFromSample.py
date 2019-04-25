@@ -65,8 +65,7 @@ def takeSampleAndGetMeanSentiment(populationFileName):
     return meanSampleSentiment
 
 
-# liberalMeanSentiment =
-takeSampleAndGetMeanSentiment('LiberalSubComments.csv')
+liberalMeanSentiment = takeSampleAndGetMeanSentiment('LiberalSubComments.csv')
 # conservativeMeanSentiment = takeSampleAndGetMeanSentiment('ConservativeSubComments.csv')
 # meanSentimentDifference = liberalMeanSentiment - conservativeMeanSentiment
 # print("Mean Difference: %d" % meanSentimentDifference)
